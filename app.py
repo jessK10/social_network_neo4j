@@ -3,10 +3,17 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 import sqlite3
 from dataclasses import dataclass
 from typing import List, Optional
+from neo4j import GraphDatabase
 
-# ======================
-# Database Access Layer
-# ======================
+
+
+# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+URI = "neo4j+s://62a775a2.databases.neo4j.io"
+AUTH = ("neo4j", "o7p1ooE0ZJhX0-veHd44Y6FCF4b5Auk2juNrRaKDDeM"
+)
+
+with GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
 class Database:
     def __init__(self, db_name='social_network.db'):
         self.db_name = db_name

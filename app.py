@@ -153,9 +153,18 @@ def user_profile(user_id):
 
 @app.route('/user/<user_id>/feed')
 def user_feed(user_id):
+    # Step 7: Feed Generation with login check and graceful error
+    if 'user_id' not in session:
+        return redirect(url_for('login', user_id=user_id))
+
     user = db.get_user(user_id)
+    if not user:
+        return "User not found", 404
+
+    current_user = db.get_user(session['user_id'])
     feed = db.get_feed(user_id)
-    return render_template('feed.html', user=user, feed=feed)
+
+    return render_template('feed.html', user=user, current_user=current_user, feed=feed)
 
 @app.route('/create_post', methods=['POST'])
 def create_post():
